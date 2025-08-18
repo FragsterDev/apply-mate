@@ -1,4 +1,4 @@
-class ApiError extends Error {
+class AppError extends Error {
   public statusCode: number;
 
   constructor(message: string, statusCode = 500) {

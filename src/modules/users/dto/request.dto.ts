@@ -2,6 +2,8 @@
 
 import * as z from "zod";
 
-export const getUserSchema: z.ZodObject = z.object({
+export const createUserSchema: z.ZodObject = z.object({
   userName: z.string(),
+  email: z.string(),
+  password: z.string(),
 });
