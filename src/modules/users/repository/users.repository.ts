@@ -1,5 +1,6 @@
 // src/repository/users.repository.ts
 import { PrismaClient } from "@prisma/client";
+import { UserResponseDto } from "../dto/response/response.dto";
 
 const prisma = new PrismaClient();
 
@@ -8,14 +9,7 @@ class UserRepository {
     // TypeScript will infer return type automatically
     return prisma.user.create({
       data: data,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        //excluding password field for security
-      },
+      select: UserResponseDto,
     });
   }
 
@@ -28,6 +22,7 @@ class UserRepository {
   async findUserById(id: string) {
     return prisma.user.findUnique({
       where: { id },
+      select: UserResponseDto,
     });
   }
 
@@ -41,6 +36,7 @@ class UserRepository {
   ) {
     return prisma.user.update({
       where: { id },
+      select: UserResponseDto,
       data,
     });
   }
@@ -48,6 +44,7 @@ class UserRepository {
   async deleteUser(id: string) {
     return prisma.user.delete({
       where: { id },
+      select: UserResponseDto,
     });
   }
 }

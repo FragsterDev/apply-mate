@@ -48,27 +48,16 @@ class UserService {
     return user;
   }
 
-  async updateUser(
-    id: string,
-    data: Partial<{ name: string; email: string; password: string }>
-  ) {
+  async updateUser(id: string, data: Partial<{ name: string }>) {
     // Check if user exists
     const existingUser = await this.userRepo.findUserById(id);
     if (!existingUser) {
       throw new AppError("User not found", 404);
     }
 
-    // Validate fields if they exist in the update request
-    if (data.email && !isValidEmail(data.email)) {
-      throw new AppError("Invalid email", 400);
-    }
-
+    //validate fields
     if (data.name && !isValidName(data.name)) {
       throw new AppError("Invalid username", 400);
-    }
-
-    if (data.password) {
-      data.password = await hashPassword(data.password);
     }
 
     // Perform the update
