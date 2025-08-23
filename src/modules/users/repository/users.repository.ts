@@ -5,11 +5,21 @@ import { UserResponseDto } from "../dto/response/response.dto";
 const prisma = new PrismaClient();
 
 class UserRepository {
-  async createUser(data: { name: string; email: string; password: string }) {
+  async createUser(data: {
+    name: string;
+    email: string;
+    password: string;
+    role?: string;
+  }) {
     // TypeScript will infer return type automatically
     return prisma.user.create({
-      data: data,
-      select: UserResponseDto,
+      data: {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        role: data.role || "USER", //default role
+      },
+      select: UserResponseDto, //what fields to send in response to the user
     });
   }
 

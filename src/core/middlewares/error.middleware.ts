@@ -20,7 +20,7 @@ const errorMiddleware = (
   }
 
   //check if its our custom ApiError
-  else if (err instanceof ApiError) {
+  else if (err instanceof AppError) {
     status = err.statusCode;
     message = err.message;
   }

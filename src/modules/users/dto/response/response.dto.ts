@@ -6,6 +6,7 @@ export const UserResponseDto = {
   id: true,
   name: true,
   email: true,
+  role: true,
   createdAt: true,
   updatedAt: true,
   //no password field for security
