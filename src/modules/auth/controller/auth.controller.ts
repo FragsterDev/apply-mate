@@ -5,8 +5,10 @@ import {
   validateResponse,
   authResponseDto,
   loginResponseDto,
+  changePasswordResponseDto,
 } from "../dto/response/response.dto";
 import { loginSchema } from "../dto/request/request.dto";
+import AppError from "../../../utils/AppError/AppError";
 
 export class AuthController {
   private authService: AuthService;
@@ -80,6 +82,27 @@ export class AuthController {
       validateResponse(loginResponse, loginResponseDto);
 
       res.status(200).json(success("Login Successful", loginResponse, 200));
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  changePassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { oldPassword, newPassword } = req.body;
+
+      const { password: _, ...updatedUser } =
+        await this.authService.changePassword(
+          req.user!.id,
+          oldPassword,
+          newPassword
+        );
+
+      validateResponse(updatedUser, changePasswordResponseDto);
+
+      res
+        .status(201)
+        .json(success("Password Updated Successfully", updatedUser, 200));
     } catch (error) {
       next(error);
     }

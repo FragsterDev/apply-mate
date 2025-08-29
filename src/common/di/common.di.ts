@@ -1,7 +1,7 @@
 //dependency injection for common files
 
 import { prisma } from "../../config/database";
-import CommonRepository from "../repository/repository";
+import CommonRepository from "../repository/common_repository";
 
 const commonRepository = new CommonRepository(prisma);
 

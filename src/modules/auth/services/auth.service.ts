@@ -105,4 +105,34 @@ export class AuthService {
       jwtToken,
     };
   };
+
+  changePassword = async (
+    id: string,
+    oldPassword: string,
+    newPassword: string
+  ) => {
+    const user = await this.authRepository.findUserById(id);
+
+    const savedPassword = user?.password;
+
+    const verifyPassword = await comparePassword(oldPassword, savedPassword!);
+
+    if (!verifyPassword) {
+      throw new AppError("Invalid Credentials Provided", 401);
+    }
+
+    if (!validatePassword(newPassword).isValid) {
+      throw new AppError(
+        `Invalid Password Format: ${validatePassword(newPassword).errors.join(", ")}`
+      );
+    }
+
+    const newHashedPassword = await hashPassword(newPassword);
+
+    const updatedUser = await this.authRepository.updateUser(id, {
+      password: newHashedPassword,
+    });
+
+    return updatedUser;
+  };
 }

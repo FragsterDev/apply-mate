@@ -12,3 +12,8 @@ export const loginSchema: z.ZodObject = z.object({
   email: z.string(),
   password: z.string(),
 });
+
+export const changePasswordSchema: z.ZodObject = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string(),
+});
