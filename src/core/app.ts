@@ -10,6 +10,7 @@ import errorMiddleware from "./middlewares/error.middleware";
 import HealthRoutes from "../modules/health/health.routes";
 import UserRoutes from "../modules/users/routes/users.routes";
 import AuthRoutes from "../modules/auth/routes/auth.routes";
+import JobRoutees from "../modules/job/routes/job.routes";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use(BASE_ROUTE, HealthRoutes);
 app.use(BASE_ROUTE, UserRoutes);
 app.use(BASE_ROUTE, AuthRoutes);
+app.use(BASE_ROUTE, JobRoutees);
 
 //fallback route 404 error
 app.use((req, res, next) => {
