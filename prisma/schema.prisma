@@ -19,18 +19,22 @@ model User {
 }
 
 model Job {
-  id          String    @id @default(uuid())
-  title       String
-  company     String
-  status      JobStatus @default(IN_PROGRESS)
-  appliedDate DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  notes       String?
-}
-
-enum JobStatus {
-  IN_PROGRESS
-  COMPLETED
-  SELECTED
+  id               String   @id @default(uuid())
+  title            String
+  company          String
+  status           String   @default("APPLIED")
+  appliedDate      DateTime @default(now())
+  lastModifiedDate DateTime @default(now()) @updatedAt
+  currentRound     String?
+  previousRounds   String[]
+  location         String?
+  salary           String?
+  jobUrl           String?
+  deadline         DateTime?
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String
+  notes            String?
+  
+  @@index([status])
+  @@index([userId])
 }

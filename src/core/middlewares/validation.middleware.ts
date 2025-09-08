@@ -1,32 +1,49 @@
-//middleware to validate the request body schema using built in parse function in Zod
-
 import * as z from "zod";
 import { Request, Response, NextFunction } from "express";
 import { error } from "../../utils/responses/responses";
 
-//to be used if the data is sent in body
+// to be used if the data is sent in body
 export const validateRequestBody = (schema: z.ZodObject<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse(req.body); //validation using zod parse function
+      schema.parse(req.body); // validation using zod parse function
       next();
     } catch (err) {
-      res.status(400).json(error(400, "Zod Error: Invalid Request Body"));
+      if (err instanceof z.ZodError) {
+        const formattedErrors = err.issues.map((e) => ({
+          path: e.path.join("."), // which field failed
+          message: e.message, // error message
+        }));
+
+        return res
+          .status(400)
+          .json(error(400, "Validation Failed", formattedErrors));
+      }
+
+      return res.status(500).json(error(500, "Internal Server Error"));
     }
   };
 };
 
-//for validating request params
+// for validating request params
 export const validateParams = (schema: z.ZodObject<any>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      // validate req.params against schema
       schema.parse(req.params);
       next();
     } catch (err) {
-      return res
-        .status(400)
-        .json(error(400, "Zod Error: Invalid request params"));
+      if (err instanceof z.ZodError) {
+        const formattedErrors = err.issues.map((e) => ({
+          path: e.path.join("."),
+          message: e.message,
+        }));
+
+        return res
+          .status(400)
+          .json(error(400, "Validation Failed", formattedErrors));
+      }
+
+      return res.status(500).json(error(500, "Internal Server Error"));
     }
   };
 };

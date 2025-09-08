@@ -13,11 +13,19 @@ const errorMiddleware = (
 
   let message = err.message || "Internal server error";
   let status = err.statusCode || 500;
+  let errors: unknown;
 
-  //check if its request schema error
+  // check if it's a request schema error
   if (err instanceof ZodError) {
     status = 400;
-    message = "Zod error: invalid request body";
+    message = "Validation failed";
+
+    const formattedErrors = err.issues.map((issue) => ({
+      path: issue.path.join("."),
+      message: issue.message,
+    }));
+
+    errors = formattedErrors;
   }
 
   //check if its our custom ApiError
@@ -31,7 +39,7 @@ const errorMiddleware = (
     message = err.message;
   }
 
-  res.status(status).json(error(status, message));
+  res.status(status).json(error(status, message, errors));
 };
 
 export default errorMiddleware;

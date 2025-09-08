@@ -1,35 +1,31 @@
 import { Router } from "express";
-
-import { validateRequestBody } from "../../../core/middlewares/validation.middleware";
 import { jobController } from "../di/dependency_injection";
 import { authenticateUser } from "../../../core/middlewares/auth.middleware";
-import { createJobSchema, updateJobSchema } from "../dto/request/request.dto";
-
-// ✅ Import request schemas
-
+import {
+  validateParams,
+  validateRequestBody,
+} from "../../../core/middlewares/validation.middleware";
+import { CreateJobDto, UpdateJobDto } from "../dto/request/request.dto";
 
 const router = Router();
 
-// create new job
 router.post(
-  "/jobs",
+  "/job",
   authenticateUser,
-  validateRequestBody(createJobSchema),
-  jobController.createJob
+  validateRequestBody(CreateJobDto),
+  jobController.createNewJob
 );
 
-// get job by id
-router.get("/jobs/:id", authenticateUser, jobController.getJobById);
+router.get("/job/:id", authenticateUser, jobController.getJobById);
 
-// update job
+router.get("/job", authenticateUser, jobController.getJobsByUser);
+
 router.put(
-  "/jobs/:id",
+  "/job/:id",
   authenticateUser,
-  validateRequestBody(updateJobSchema),
-  jobController.updateJob
+  validateRequestBody(UpdateJobDto),
+  jobController.updateJobById
 );
-
-// delete job
-router.delete("/jobs/:id", authenticateUser, jobController.deleteJob);
+router.delete("/job/:id", authenticateUser, jobController.deleteJobById);
 
 export default router;

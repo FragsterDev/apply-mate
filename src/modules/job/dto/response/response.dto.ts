@@ -1,21 +1,20 @@
-import * as z from "zod";
+import { z } from "zod";
 
-// Response DTO for a job
-export const jobResponseDto = z.object({
+export const JobResponseDto = z.object({
   id: z.string(),
   title: z.string(),
   company: z.string(),
-  appliedDate: z.string(),
-  status: z.string(), // since you didn’t want enum
-  notes: z.string().nullable(), // nullable because db might allow null
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  status: z.string(),
+  appliedDate: z.coerce.date(),
+  lastModifiedDate: z.coerce.date(),
+  currentRound: z.string().nullable(),
+  previousRounds: z.array(z.string()),
+  location: z.string().nullable(),
+  salary: z.string().nullable(),
+  jobUrl: z.string().nullable(),
+  deadline: z.coerce.date().nullable(),
+  notes: z.string().nullable(),
   userId: z.string(),
 });
 
-// For returning a single job
-export type JobResponse = z.infer<typeof jobResponseDto>;
-
-// For returning an array of jobs
-export const jobsListResponseDto = z.array(jobResponseDto);
-export type JobsListResponse = z.infer<typeof jobsListResponseDto>;
+export type JobResponseDto = z.infer<typeof JobResponseDto>;
