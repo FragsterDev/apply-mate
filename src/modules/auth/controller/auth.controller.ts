@@ -7,8 +7,6 @@ import {
   loginResponseDto,
   changePasswordResponseDto,
 } from "../dto/response/response.dto";
-import { loginSchema } from "../dto/request/request.dto";
-import AppError from "../../../utils/AppError/AppError";
 
 export class AuthController {
   private authService: AuthService;
